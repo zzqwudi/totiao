@@ -17,9 +17,8 @@ Works with Python versions 3.X.
 """
 from datetime import datetime, timedelta
 
-from flask import current_app
-
 import jwt
+from flask import current_app
 
 
 # jwt  json web token
@@ -46,21 +45,22 @@ import jwt
 # python的jwt本质上实现了两个方法 一个是生成jwt 一个是验证jwt
 
 
-def generate_jwt(payload, expiry, secret=None):
+def generate_jwt(payload, expiry, secret=None):  # 生成token
     _payload = {'exp': expiry}
 
     _payload.update(payload)
 
-    secret = secret if secret else current_app.config['JWT_SECRET']
+    secret = secret if secret else current_app.config['JWT_SECRET']  # 加密秘钥
 
-    token = jwt.encode(payload=_payload, key=secret, algorithm='HS256')
+    token = jwt.encode(payload=_payload, key=secret, algorithm='HS256')  # 生成token
     return token.decode()
 
 
 def verify_jwt(token, secret=None):  # 验证token
-    secret = secret if secret else current_app.config['JWT_SECRET']
+    secret = secret if secret else current_app.config['JWT_SECRET'] # 加密秘钥
     try:
-        payload = jwt.decode(token, secret, algorithm='HS256')
+        payload = jwt.decode(token, secret, algorithm='HS256') # 解密token
+        return payload
     except jwt.PyJWTError:
         payload = None
     return payload
